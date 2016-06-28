@@ -110,7 +110,10 @@ namespace Microsoft.Bot.Sample.PizzaBot
 				}
 			}
 
-			if (gardenObject.Object.Contains("all"))
+			if (gardenObject.Object == null)
+			{
+			}
+			else if (gardenObject.Object.Contains("all"))
 			{
 				ExistingObjects.Clear();
 			}
@@ -118,13 +121,14 @@ namespace Microsoft.Bot.Sample.PizzaBot
 			{
 				for (int i = ExistingObjects.Count - 1; i >= 0; i--)
 				{
-					if (ExistingObjects[i].Object == gardenObject.Object)
+					if (ExistingObjects[i].Object.Contains(gardenObject.Object) ||
+						gardenObject.Object.Contains(ExistingObjects[i].Object))
 					{
 						ExistingObjects[i].Amount -= gardenObject.Amount;
 					}
 					if (ExistingObjects[i].Amount < 1)
 					{
-						ExistingObjects.Remove(gardenObject);
+						ExistingObjects.RemoveAt(i);
 					}
 				}
 			}
