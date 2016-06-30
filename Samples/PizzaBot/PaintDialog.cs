@@ -13,9 +13,10 @@ namespace Microsoft.Bot.Sample.PizzaBot
 {
 	[LuisModel("4ed5a5de-6461-4f62-8724-e3953282ab1d", "df42d05539ff446db4dcba16c2ac3a05")]
 	[Serializable]
-	class GardenDialog : LuisDialog<GardenObjects>
+	class GardenDialog : LuisDialog<GardenObject>
 	{
-		private readonly List<GardenObjects> ExistingObjects = new List<GardenObjects>();
+		private List<GardenObject> ExistingObjects = new List<GardenObject>();
+		//private List
 
 		[LuisIntent("")]
 		public async Task None(IDialogContext context, LuisResult result)
@@ -60,7 +61,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 
 		private void addEntityToList(List<EntityRecommendation> entities)
 		{
-			var gardenObject = new GardenObjects
+			var gardenObject = new GardenObject
 			{
 				Characteristics = new List<string>()
 			};
@@ -87,7 +88,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 
 		private void removeEntityFromList(List<EntityRecommendation> entities)
 		{
-			var gardenObject = new GardenObjects
+			var gardenObject = new GardenObject
 			{
 				Characteristics = new List<string>()
 			};

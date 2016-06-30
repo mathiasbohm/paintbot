@@ -7,11 +7,14 @@ using System.Text;
 namespace Microsoft.Bot.Sample.PizzaBot
 {
 	[Serializable]
-	class GardenObjects
+	class GardenObject
 	{
 		public string Object { get; set; }
 		public int Amount;
 		public List<string> Characteristics;
+		public Tuple<double, double, double> Position;
+		public Tuple<double, double> Scale;
+		public string Color { get; set; }
 
 		public override string ToString()
 		{

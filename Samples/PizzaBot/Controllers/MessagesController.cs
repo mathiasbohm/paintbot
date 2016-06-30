@@ -10,16 +10,16 @@ namespace Microsoft.Bot.Sample.PizzaBot
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-		private static IForm<GardenObjects> BuildForm()
+		private static IForm<GardenObject> BuildForm()
         {
-			var builder = new FormBuilder<GardenObjects>();
+			var builder = new FormBuilder<GardenObject>();
 
             return builder
                 .Build()
                 ;
         }
 
-		internal static IDialog<GardenObjects> MakeRoot()
+		internal static IDialog<GardenObject> MakeRoot()
         {
 			return Chain.From(() => new GardenDialog());
         }
