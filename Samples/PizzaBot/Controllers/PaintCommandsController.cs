@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace Microsoft.Bot.Sample.PizzaBot.Controllers
 {
@@ -18,9 +20,26 @@ namespace Microsoft.Bot.Sample.PizzaBot.Controllers
 		// GET: api/PaintCommands/5
 		public string Get(int id)
 		{
-			return "value " + id;
-		}
+			var commands = new List<Command>();
+			var len = GardenDialog.CommandStack.Count;
 
+			if (len <= id)
+			{
+				return "";
+			}
+
+			//for (int i = id; i < len; i++)
+			//{
+			//	commands.Add(GardenDialog.CommandStack[id]);
+			//}
+
+			Command c = GardenDialog.CommandStack[id];
+			GardenObject go = c.gardenObject;
+
+
+			var x = JsonConvert.SerializeObject(go);
+			return x;
+		}
 	}
 }
 	

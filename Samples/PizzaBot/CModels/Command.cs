@@ -7,7 +7,13 @@ namespace Microsoft.Bot.Sample.PizzaBot
 {
 	public class Command
 	{
-		int index { get; set; }
-		//GardenObject 
+		public int index { get; set; }
+		public GardenObject gardenObject { get; set; }
+
+		public Command(int index, GardenObject go)
+		{
+			index = index;
+			gardenObject = go;
+		}
 	}
 }
