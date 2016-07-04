@@ -136,8 +136,56 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\initPicturelist.js" />
+    <Content Include="app\promises.js" />
+    <Content Include="assets\Apfel.svg" />
+    <Content Include="assets\Baum.svg" />
+    <Content Include="assets\brunnen.svg" />
+    <Content Include="assets\Cocktail.svg" />
+    <Content Include="assets\Eis.svg" />
+    <Content Include="assets\Frau.svg" />
+    <Content Include="assets\Grab.svg" />
+    <Content Include="assets\Gras.svg" />
+    <Content Include="assets\Grill.svg" />
+    <Content Include="assets\Harke.svg" />
+    <Content Include="assets\Hase.svg" />
+    <Content Include="assets\Haus.svg" />
+    <Content Include="assets\Igel.svg" />
+    <Content Include="assets\Kanne.svg" />
+    <Content Include="assets\Karotte.svg" />
+    <Content Include="assets\Kind.svg" />
+    <Content Include="assets\Kirsche.svg" />
+    <Content Include="assets\Kreis.svg" />
+    <Content Include="assets\Kreuz.svg" />
+    <Content Include="assets\Linie_horizontal.svg" />
+    <Content Include="assets\Linie_links.svg" />
+    <Content Include="assets\Linie_oben.svg" />
+    <Content Include="assets\Linie_rechts.svg" />
+    <Content Include="assets\Linie_unten.svg" />
+    <Content Include="assets\Linie_vertikal.svg" />
+    <Content Include="assets\Mann.svg" />
+    <Content Include="assets\Rasenmäher.svg" />
+    <Content Include="assets\Raupe.svg" />
+    <Content Include="assets\Regen.svg" />
+    <Content Include="assets\Regenbogen.svg" />
+    <Content Include="assets\Rose.svg" />
+    <Content Include="assets\Schaf.svg" />
+    <Content Include="assets\Schaufel.svg" />
+    <Content Include="assets\Schippe.svg" />
+    <Content Include="assets\Schmetterling.svg" />
+    <Content Include="assets\Sonne.svg" />
+    <Content Include="assets\Tanne.svg" />
+    <Content Include="assets\Tomate.svg" />
+    <Content Include="assets\Vogel.svg" />
+    <Content Include="assets\Wolke.svg" />
+    <Content Include="assets\Zaun.svg" />
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
+    <Content Include="index.html" />
+    <Content Include="pics\AAA_paintbot.png" />
+    <Content Include="pics\paintarea-background.jpg" />
+    <Content Include="pics\paintarea.jpg" />
+    <Content Include="styles\styles.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="assets\objects.txt" />
     <None Include="Properties\PublishProfiles\PaintBotDe.pubxml" />
     <None Include="Properties\PublishProfiles\PUS5.pubxml" />
     <None Include="Web.Debug.config">

@@ -59,37 +59,92 @@ namespace Microsoft.Bot.Sample.PizzaBot
 		[LuisIntent("CreateActivity")]
 		public async Task CreateObject(IDialogContext context, LuisResult result)
 		{
-			var entities = new List<EntityRecommendation>(result.Entities);
-			createEntityToList(entities);
-			await context.PostAsync("Auf dem Bild sind: " + answer());
-			context.Wait(MessageReceived);
+			if (result.Query.Contains("entferne") || result.Query.Contains("lösche"))
+			{
+				await DeleteObject(context, result);
+			}
+			else
+			{
+				var entities = new List<EntityRecommendation>(result.Entities);
+				createEntityToList(entities);
+				await context.PostAsync("Auf dem Bild sind jetzt: " + answer());
+				context.Wait(MessageReceived);
+			}
 		}
 
 		[LuisIntent("MoveActivity")]
 		public async Task MoveObject(IDialogContext context, LuisResult result)
 		{
-			var entities = new List<EntityRecommendation>(result.Entities);
-			moveEntity(entities);
-			await context.PostAsync("Ich verschiebe " + answer());
-			context.Wait(MessageReceived);
+			if (result.Query.Contains("entferne") || result.Query.Contains("lösche"))
+			{
+				await DeleteObject(context, result);
+			}
+			else
+			{
+				var entities = new List<EntityRecommendation>(result.Entities);
+				completeObject(result, entities);
+				moveEntity(entities);
+				await context.PostAsync("Auf dem Bild sind: " + answer());
+				context.Wait(MessageReceived);
+			}
 		}
 
 		[LuisIntent("DeleteActivity")]
 		public async Task DeleteObject(IDialogContext context, LuisResult result)
 		{
 			var entities = new List<EntityRecommendation>(result.Entities);
+			completeObject(result, entities);
 			removeEntityFromList(entities);
 			await context.PostAsync("Auf dem Bild sind: " + answer());
 			context.Wait(MessageReceived);
 		}
 
+		private static void completeObject(LuisResult result, List<EntityRecommendation> entities)
+		{
+			bool containsObject = false;
+			foreach (var entity in entities)
+			{
+				if (entity.Type == "Object")
+				{
+					containsObject = true;
+				}
+			}
+			if (!containsObject)
+			{
+				if (result.Query.ToLower().Contains("all"))
+				{
+					entities.Add(new EntityRecommendation
+					{
+						Type = "Object",
+						Entity = "All"
+					});
+				}
+				else if (CurrentGardenObject != null && CurrentGardenObject.Tagname != null)
+				{
+					entities.Add(new EntityRecommendation
+					{
+						Type = "Object",
+						Entity = CurrentGardenObject.Tagname
+					});
+				}
+			}
+		}
+
 		[LuisIntent("TransformActivity")]
 		public async Task TransformObject(IDialogContext context, LuisResult result)
 		{
-			var entities = new List<EntityRecommendation>(result.Entities);
-			transformEntity(entities);
-			await context.PostAsync("Ich verändere " + answer());
-			context.Wait(MessageReceived);
+			if (result.Query.Contains("entferne") || result.Query.Contains("lösche"))
+			{
+				await DeleteObject(context, result);
+			}
+			else
+			{
+				var entities = new List<EntityRecommendation>(result.Entities);
+				completeObject(result, entities);
+				transformEntity(entities);
+				await context.PostAsync("Auf dem Bild sind: " + answer());
+				context.Wait(MessageReceived);
+			}
 		}
 
 		public void moveEntity(List<EntityRecommendation> entities)
@@ -192,7 +247,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 			string removedId = "";
 			CurrentGardenObject = createGardenObject(entities);
 
-			if (CurrentGardenObject.Tagname != null && CurrentGardenObject.Tagname.Contains("all"))
+			if ((CurrentGardenObject.Tagname != null && CurrentGardenObject.Tagname.ToLower().Contains("all")))
 			{
 				ExistingObjects.Clear();
 				CommandStack.Clear();
@@ -200,21 +255,24 @@ namespace Microsoft.Bot.Sample.PizzaBot
 			else
 			{
 				CurrentGardenObject = findAndReplaceGardenObject(CurrentGardenObject);
-				for (int i = ExistingObjects.Count - 1; i >= 0; i--)
+				if (ExistingObjects.Count > 0)
 				{
-					if (ExistingObjects[i].Tagname.Contains(CurrentGardenObject.Tagname) ||
-						CurrentGardenObject.Tagname.Contains(ExistingObjects[i].Tagname))
+					for (int i = ExistingObjects.Count - 1; i >= 0; i--)
 					{
-						ExistingObjects[i].Amount -= CurrentGardenObject.Amount;
+						if (ExistingObjects[i].Tagname.Contains(CurrentGardenObject.Tagname) ||
+							CurrentGardenObject.Tagname.Contains(ExistingObjects[i].Tagname))
+						{
+							ExistingObjects[i].Amount -= CurrentGardenObject.Amount;
+						}
+						if (ExistingObjects[i].Amount < 1)
+						{
+							removedId = CurrentGardenObject.Identifier;
+							ExistingObjects.RemoveAt(i);
+						}
 					}
-					if (ExistingObjects[i].Amount < 1)
-					{
-						removedId = CurrentGardenObject.Identifier;
-						ExistingObjects.RemoveAt(i);
-					}
+					sendCommand(CurrentGardenObject);
 				}
 			}
-			sendCommand(CurrentGardenObject);
 			CurrentGardenObject = null;
 			return removedId;
 		}
@@ -223,12 +281,14 @@ namespace Microsoft.Bot.Sample.PizzaBot
 		{
 			var gardenObject = new GardenObject();
 
+			bool containsObject = false;
 			foreach (var entity in entities)
 			{
 				switch (entity.Type)
 				{
 					case "Object":
 						gardenObject.Tagname = tagOfEntity(entity.Entity);
+						containsObject = true;
 						break;
 					case "Identifier":
 						gardenObject.Identifier = entity.Entity;
@@ -242,6 +302,11 @@ namespace Microsoft.Bot.Sample.PizzaBot
 						gardenObject.Amount = a;
 						break;
 				}
+			}
+
+			if (!containsObject && CurrentGardenObject != null)
+			{
+				gardenObject.Tagname = CurrentGardenObject.Tagname;
 			}
 			return gardenObject;
 		}
@@ -257,6 +322,12 @@ namespace Microsoft.Bot.Sample.PizzaBot
 					result = key;
 				}
 			}
+
+			if (result.Contains("unknown") && CurrentGardenObject != null && CurrentGardenObject.Tagname != null)
+			{
+				result = CurrentGardenObject.Tagname;
+			}
+
 			return result;
 		}
 
@@ -284,8 +355,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 				}
 
 				result += entity.Amount + " ";
-				result = entity.MetaInfos.Aggregate(result, (current, c) => current + (c + " "));
-				result += entity.Identifier;
+				result += entity.Tagname;
 			}
 
 			return result;
