@@ -36,7 +36,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 			{"horizontal", new List<string>{"horizontal", "waagerecht"}},
 			{"raupe", new List<string>{"raupe", "raupen"}},
 			{"regen", new List<string>{"regen", "regentropfen", "starkregen", "wasser"}},
-			{"rose", new List<string>{"rose", "rosen", "stachel", "stacheln"}},
+			{"rose", new List<string>{"blume", "blumen", "rose", "rosen", "stachel", "stacheln"}},
 			{"vogel", new List<string>{"vogel", "vögel", "zaunkönig", "zaukönige", "spatz", "spatze", "krähe", "krähen", "raabe", "raaben"}},
 			{"tomate", new List<string>{"tomate", "tomaten", "cherrytomate", "cherrytomaten", "strauchtomate", "strauchtomaten", "romatomate", "romatomaten"}},
 			{"tanne", new List<string>{"tanne", "tannen"}},
@@ -108,26 +108,26 @@ namespace Microsoft.Bot.Sample.PizzaBot
 				if (info == "links")
 				{
 					var tmp = CurrentGardenObject.Position;
-					CurrentGardenObject.Position = new Tuple<double, double, double>(tmp.Item1 / 4, tmp.Item2, tmp.Item3);
+					CurrentGardenObject.Position = new Tuple<double, double, double>(tmp.Item1 / 4 * 3, tmp.Item2, tmp.Item3);
 					CurrentGardenObject.MetaInfos.RemoveAt(i);
 				}
 				if (info == "rechts")
 				{
 					var tmp = CurrentGardenObject.Position;
-					CurrentGardenObject.Position = new Tuple<double, double, double>(1 - ((1 - tmp.Item1) / 4), tmp.Item2, tmp.Item3);
+					CurrentGardenObject.Position = new Tuple<double, double, double>(1 - ((1 - tmp.Item1) / 4 * 3), tmp.Item2, tmp.Item3);
 					CurrentGardenObject.MetaInfos.RemoveAt(i);
 				}
 
 				if (info == "oben")
 				{
 					var tmp = CurrentGardenObject.Position;
-					CurrentGardenObject.Position = new Tuple<double, double, double>(tmp.Item1, tmp.Item2 / 4, tmp.Item3);
+					CurrentGardenObject.Position = new Tuple<double, double, double>(tmp.Item1, tmp.Item2 / 4 * 3, tmp.Item3);
 					CurrentGardenObject.MetaInfos.RemoveAt(i);
 				}
 				if (info == "unten")
 				{
 					var tmp = CurrentGardenObject.Position;
-					CurrentGardenObject.Position = new Tuple<double, double, double>(tmp.Item1, 1 - ((1 - tmp.Item2) / 4), tmp.Item3);
+					CurrentGardenObject.Position = new Tuple<double, double, double>(tmp.Item1, 1 - ((1 - tmp.Item2) / 4 * 3), tmp.Item3);
 					CurrentGardenObject.MetaInfos.RemoveAt(i);
 				}
 			}
@@ -178,7 +178,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 					gardenObject = existingObject;
 					gardenObject.MetaInfos.AddRange(meta);
 				}
-				else if (existingObject.Tagname == gardenObject.Tagname)
+				else if (existingObject.Tagname.ToLower() == gardenObject.Tagname.ToLower())
 				{
 					gardenObject = existingObject;
 					gardenObject.MetaInfos.AddRange(meta);
@@ -187,8 +187,9 @@ namespace Microsoft.Bot.Sample.PizzaBot
 			return gardenObject;
 		}
 
-		public void removeEntityFromList(List<EntityRecommendation> entities)
+		public string removeEntityFromList(List<EntityRecommendation> entities)
 		{
+			string removedId = "";
 			CurrentGardenObject = createGardenObject(entities);
 
 			if (CurrentGardenObject.Tagname != null && CurrentGardenObject.Tagname.Contains("all"))
@@ -208,12 +209,14 @@ namespace Microsoft.Bot.Sample.PizzaBot
 					}
 					if (ExistingObjects[i].Amount < 1)
 					{
+						removedId = CurrentGardenObject.Identifier;
 						ExistingObjects.RemoveAt(i);
 					}
 				}
 			}
 			sendCommand(CurrentGardenObject);
 			CurrentGardenObject = null;
+			return removedId;
 		}
 
 		private GardenObject createGardenObject(List<EntityRecommendation> entities)
@@ -245,16 +248,16 @@ namespace Microsoft.Bot.Sample.PizzaBot
 
 		private string tagOfEntity(string tag)
 		{
-			string key = "unknowen";//tag;
-			foreach (var kvp in TagList.Keys)
+			string result = "unknown (" + tag + ")";//tag;
+			foreach (var key in TagList.Keys)
 			{
-				var tmp = TagList[kvp];
-				if (tmp.Contains(tag))
+				var possibleNames = TagList[key];
+				if (possibleNames.Contains(tag.ToLower()))
 				{
-					key = kvp;
+					result = key;
 				}
 			}
-			return key;
+			return result;
 		}
 
 		private void sendCommand(GardenObject CurrentGardenObject)

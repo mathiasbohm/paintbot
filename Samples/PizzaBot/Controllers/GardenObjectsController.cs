@@ -40,6 +40,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 				});
 			}
 
+			string removedId = "";
 			if (action == "create")
 			{
 				dialog.createEntityToList(entities);
@@ -48,13 +49,13 @@ namespace Microsoft.Bot.Sample.PizzaBot
 			{
 				dialog.moveEntity(entities);
 			}
-			else if (action == "delete")
+			else if (action == "remove")
 			{
-				dialog.removeEntityFromList(entities);
+				removedId = dialog.removeEntityFromList(entities);
 			}
 			return GardenDialog.CurrentGardenObject != null 
 				? GardenDialog.CurrentGardenObject.Identifier
-				: "null";
+				: removedId;
 		}
 	}
 }
