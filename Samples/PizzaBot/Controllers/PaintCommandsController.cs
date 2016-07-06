@@ -20,7 +20,7 @@ namespace Microsoft.Bot.Sample.PizzaBot.Controllers
 		// GET: api/PaintCommands/5
 		public string Get(int id)
 		{
-			var commands = new List<Command>();
+			var commands = new List<CCommand>();
 			var len = GardenDialog.CommandStack.Count;
 
 			if (len <= id)
@@ -33,7 +33,7 @@ namespace Microsoft.Bot.Sample.PizzaBot.Controllers
 			//	commands.Add(GardenDialog.CommandStack[id]);
 			//}
 
-			Command c = GardenDialog.CommandStack[id];
+			CCommand c = GardenDialog.CommandStack[id];
 			GardenObject go = c.gardenObject;
 
 

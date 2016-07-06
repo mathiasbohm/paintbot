@@ -5,12 +5,12 @@ using System.Web;
 
 namespace Microsoft.Bot.Sample.PizzaBot
 {
-	public class Command
+	public class CCommand
 	{
 		public int index { get; set; }
 		public GardenObject gardenObject { get; set; }
 
-		public Command(int index, GardenObject go)
+		public CCommand(int index, GardenObject go)
 		{
 			index = index;
 			gardenObject = go;

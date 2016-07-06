@@ -17,7 +17,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 	{
 		private static List<GardenObject> ExistingObjects = new List<GardenObject>();
 		public static GardenObject CurrentGardenObject;
-		public static List<Command> CommandStack = new List<Command>();
+		public static List<CCommand> CommandStack = new List<CCommand>();
 
 		private Dictionary<string, List<string>> TagList = new Dictionary<string, List<string>>
 		{
@@ -333,7 +333,7 @@ namespace Microsoft.Bot.Sample.PizzaBot
 
 		private void sendCommand(GardenObject CurrentGardenObject)
 		{
-			var cmd = new Command(CommandStack.Count + 1, CurrentGardenObject);		
+			var cmd = new CCommand(CommandStack.Count + 1, CurrentGardenObject);		
 	
 			CommandStack.Add(cmd);
 		}
