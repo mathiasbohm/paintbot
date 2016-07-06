@@ -151,6 +151,7 @@
     <Content Include="assets\Hase.svg" />
     <Content Include="assets\Haus.svg" />
     <Content Include="assets\Igel.svg" />
+    <Content Include="assets\index.html" />
     <Content Include="assets\Kanne.svg" />
     <Content Include="assets\Karotte.svg" />
     <Content Include="assets\Kind.svg" />
@@ -164,6 +165,7 @@
     <Content Include="assets\Linie_unten.svg" />
     <Content Include="assets\Linie_vertikal.svg" />
     <Content Include="assets\Mann.svg" />
+    <Content Include="assets\objects.txt" />
     <Content Include="assets\Rasenmäher.svg" />
     <Content Include="assets\Raupe.svg" />
     <Content Include="assets\Regen.svg" />
@@ -205,7 +207,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="assets\objects.txt" />
+    <Content Include="app\initPicturelist._js" />
+    <Content Include="app\initPicturelist.__js" />
     <None Include="Properties\PublishProfiles\PaintBotDe.pubxml" />
     <None Include="Properties\PublishProfiles\PUS5.pubxml" />
     <None Include="Web.Debug.config">
